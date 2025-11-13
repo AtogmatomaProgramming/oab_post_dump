@@ -3,6 +3,9 @@
 #### author: Marco A. Ámez Fernández
 #### email: ieo.marco.a.amez@gmail.com
 
+# TEST VISUAL STUDIO CODE DEBUGGING
+# install.packages("vscDebugger", repos = "https://manuelhentschel.r-universe.dev")
+
 # INSTRUCTIONS -----------------------------------------------------------------
 
 # To use this script:
@@ -28,21 +31,21 @@
 
 # YOU HAVE ONLY TO CHANGE THIS VARIABLES ---------------------------------------
 
-trips_file <- "IEODESMAREAMARCO.TXT"
-hauls_file <- "IEODESLANCEMARCO.TXT"
-catches_file <- "IEODESCAPTURAMARCO.TXT"
-lengths_file <- "IEODESTALLASMARCO.TXT"
-litter_file <- "IEODESBASURASMARCO.TXT"
-accidentals_file <- "IEODESCAPTACCIDMARCO.TXT"
+trips_file <- "IEODESMAREAACANDELARIO.TXT"
+hauls_file <- "IEODESLANCEACANDELARIO.TXT"
+catches_file <- "IEODESCAPTURAACANDELARIO.TXT"
+lengths_file <- "IEODESTALLASACANDELARIO.TXT"
+litter_file <- "IEODESBASURASACANDELARIO.TXT"
+accidentals_file <- "IEODESCAPTACCIDACANDELARIO.TXT"
 
 # MONTH: 1 to 12, or vector with month in numbers
-MONTH <- 4
+MONTH <- 1
 # MONTH <- c(1:12)
 
 # Suffix to path folder (useful when the data of the same month is received
 # in different files). If it is not necessary, use "".
 # FOLDER_SUFFIX <- "b"
-FOLDER_SUFFIX <- ""
+FOLDER_SUFFIX <- "TEST"
 
 # Suffix to add to path. Use only in case MONTH is a vector of months. This
 # suffix will be added to the end of the path with a "_" as separation.
@@ -50,7 +53,7 @@ FOLDER_SUFFIX <- ""
 
 YEAR <- 2025
 
-PATH_SHARED_FOLDER <- "C:/Users/ieoma/Nextcloud/SAP_OAB/OAB_data_review"
+PATH_SHARED_FOLDER <- "C:/Users/IEO_Marco/Nextcloud/SAP_OAB/OAB_data_review"
 
 # cfpo to use in the script
 cfpo_to_use <- "CFPO2024 DEF.xlsx"
@@ -82,6 +85,7 @@ source("create_elasmobranchii_file.R")
 source("check_them_all.R")
 source("check_them_all_annual.R")
 source("oab_post_dump_speed_plot_functions.R")
+source("R/filter_by_months.R")
 
 # GLOBAL VARIABLES -------------------------------------------------------------
 
@@ -193,49 +197,21 @@ CONTACTS <- read.csv(file.path(PATH_PRIVATE_FILES, "contacts.csv"))
 
 
 # IMPORT DISCARDS FILES --------------------------------------------------------
-
-# discards_samples <- importOABFiles(trips_file, hauls_file, catches_file, lengths_file,
-# litter_file, accidentals_file, path = PATH_FILES)
-
-OAB_trips <- importOABTrips(trips_file, path = PATH_FILES)
-
-OAB_hauls <- importOABHauls(hauls_file, path = PATH_FILES)
-
-OAB_catches <- importOABCatches(catches_file, path = PATH_FILES)
-
-OAB_lengths <- importOABLengths(lengths_file, path = PATH_FILES)
-
-OAB_litter <- importOABLitter(litter_file, path = PATH_FILES)
-
-OAB_accidentals <- importOABAccidentals(accidentals_file, path = PATH_FILES)
+OAB_data <- importOABFiles(trips_file, hauls_file, catches_file,
+                           lengths_file, litter_file, accidentals_file,
+                           path = PATH_FILES)
 
 
 # FILTER BY MONTH --------------------------------------------------------------
-# only when one month is used.
+filtered_data <- filter_by_months(oab_data = OAB_data, months = MONTH,  year = YEAR)
 
-if (length(MONTH) == 1 && MONTH %in% seq(1:12)) {
-  # WARNING!! DOES NOT WORK WITH JANUARY-DECEMBER!!!! :(
-  OAB_trips <- OAB_trips[
-    as.POSIXlt(OAB_trips$FECHA_INI_MAREA)$mon + 1 == MONTH |
-      (as.POSIXlt(OAB_trips$FECHA_INI_MAREA)$mon + 1 == MONTH - 1 & as.POSIXlt(OAB_trips$FECHA_FIN_MAREA)$mon + 1 == MONTH),
-  ]
-  OAB_hauls <- OAB_hauls[OAB_hauls$COD_MAREA %in% OAB_trips$COD_MAREA, ]
-  OAB_catches <- OAB_catches[OAB_catches$COD_MAREA %in% OAB_trips$COD_MAREA, ]
-  OAB_lengths <- OAB_lengths[OAB_lengths$COD_MAREA %in% OAB_trips$COD_MAREA, ]
-}
-
-# when multiple months are used
-if (all(length(MONTH) >= 1 & MONTH %in% seq(1:12))) {
-  # TODO: TEST USING OAB_trips$FECHA_FIN_MAREA instead OAB_trips$FECHA_INI_MAREA
-  # I THINK THIS DOES NOT WORK:
-  OAB_trips <- OAB_trips[as.POSIXlt(OAB_trips$FECHA_FIN_MAREA, format = "%d/%m/%Y")$mon + 1 %in% MONTH &
-    (as.POSIXlt(OAB_trips$FECHA_FIN_MAREA, format = "%d/%m/%Y")$year + 1900) == YEAR, ]
-  OAB_hauls <- OAB_hauls[OAB_hauls$COD_MAREA %in% OAB_trips$COD_MAREA, ]
-  OAB_catches <- OAB_catches[OAB_catches$COD_MAREA %in% OAB_trips$COD_MAREA, ]
-  OAB_lengths <- OAB_lengths[OAB_lengths$COD_MAREA %in% OAB_trips$COD_MAREA, ]
-}
-
-
+# EXTRACT DATASETS -------------------------------------------------------------
+OAB_trips <- filtered_data$trips
+OAB_hauls <- filtered_data$hauls
+OAB_catches <- filtered_data$catches
+OAB_lengths <- filtered_data$lengths
+OAB_litter <- filtered_data$litter
+OAB_accidentals <- filtered_data$accidentals
 
 # FILTER BY ACRONYM ------------------------------------------------------------
 
@@ -305,7 +281,7 @@ htmlwidgets::saveWidget(speed_plot_interactive, file.path(PATH_ERRORS, paste0(fi
 
 
 # SAVE FILES TO SHARED FOLDER ----
-copyErrorsFilesToSharedFolder()
+# copyErrorsFilesToSharedFolder()
 
 # SEND EMAILS AUTOMATICALLY ----------------------------------------------------
 # The first time the errors will be sent by email, a credential file must be
@@ -349,8 +325,6 @@ sendErrorsByEmail(
   credentials_file = "credentials",
   identification_sampling = SUFFIX_TO_EXPORT
 )
-
-
 
 # BACKUP SCRIPTS AND RELATED FILES ----
 # first save all files opened
