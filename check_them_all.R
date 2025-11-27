@@ -142,7 +142,9 @@ check_them_all <- function(){
 
   ERR$cephalopods_counted <- cephalopods_counted()
 
-  ERR$retained_weight_one_specimen_measured <- retained_weight_one_specimen_measured()#***
+  ERR$retained_weight_one_specimen_measured <- retained_weight_one_specimen_measured()#*** 
+
+  ERR$match_hauls_catches_samples_ids <- match_hauls_catches_samples_ids(OAB_catches, OAB_hauls)
 
 
   # LENGTHS

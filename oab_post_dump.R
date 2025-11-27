@@ -39,7 +39,7 @@ litter_file <- "IEODESBASURASACANDELARIO.TXT"
 accidentals_file <- "IEODESCAPTACCIDACANDELARIO.TXT"
 
 # MONTH: 1 to 12, or vector with month in numbers
-MONTH <- 1
+MONTH <- 9
 # MONTH <- c(1:12)
 
 # Suffix to path folder (useful when the data of the same month is received
@@ -59,7 +59,7 @@ PATH_SHARED_FOLDER <- "C:/Users/IEO_Marco/Nextcloud/SAP_OAB/OAB_data_review"
 cfpo_to_use <- "CFPO2024 DEF.xlsx"
 
 # sireno fleet file to use in the script
-sireno_fleet_to_use <- "IEOPROBARMARCO_2024_03_12.TXT"
+sireno_fleet_to_use <- "IEOPROBARACANDELARIO.TXT"
 
 # PACKAGES ---------------------------------------------------------------------
 
@@ -212,6 +212,7 @@ OAB_catches <- filtered_data$catches
 OAB_lengths <- filtered_data$lengths
 OAB_litter <- filtered_data$litter
 OAB_accidentals <- filtered_data$accidentals
+
 
 # FILTER BY ACRONYM ------------------------------------------------------------
 
