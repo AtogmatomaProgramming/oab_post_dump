@@ -39,7 +39,7 @@ litter_file <- "IEODESBASURASACANDELARIO.TXT"
 accidentals_file <- "IEODESCAPTACCIDACANDELARIO.TXT"
 
 # MONTH: 1 to 12, or vector with month in numbers
-MONTH <- 9
+MONTH <- 1
 # MONTH <- c(1:12)
 
 # Suffix to path folder (useful when the data of the same month is received
@@ -59,7 +59,7 @@ PATH_SHARED_FOLDER <- "C:/Users/IEO_Marco/Nextcloud/SAP_OAB/OAB_data_review"
 cfpo_to_use <- "CFPO2024 DEF.xlsx"
 
 # sireno fleet file to use in the script
-sireno_fleet_to_use <- "IEOPROBARACANDELARIO.TXT"
+sireno_fleet_to_use <- "IEOPROBARMARCO_2024_03_12.TXT"
 
 # PACKAGES ---------------------------------------------------------------------
 
@@ -247,6 +247,10 @@ OAB_accidentals <- filtered_data$accidentals
 
 ERRORS <- check_them_all()
 # ERRORS <- check_them_all_annual()
+
+# This error mustn't be sent to sups. In case of any error detected, it must me
+# solved previously.
+ERROR_match_hauls_catches_trip_ids <- match_hauls_catches_trip_ids(OAB_catches, OAB_hauls)
 
 # FORMAT ERRORS ----------------------------------------------------------------
 

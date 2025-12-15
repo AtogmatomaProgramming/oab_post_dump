@@ -155,7 +155,6 @@ check_them_all_annual <- function() {
 
   ERR$species_without_retained_and_discarded_weight <- species_without_retained_and_discarded_weight(OAB_catches)
 
-  ERR$match_hauls_catches_samples_ids <- match_hauls_catches_samples_ids(OAB_catches, OAB_hauls)
 
   # LENGTHS
   # In 2021 data, the computer cant manage the next error, so I use it with
