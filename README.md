@@ -1,6 +1,6 @@
 # Post-dump revision of discard data saved in SIRENO
 
-#### v. 1.4.7
+#### v. 1.5
 
 The SAP project from the Spanish Institute of Oceanography (IEO) obtains,
 analyzes and prepare the necessary information to monitor the fishery activity
