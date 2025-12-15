@@ -1557,6 +1557,18 @@ hauls_unsampled_with_discard_weight <- function(df){
   }
 }
 
+#' Check code: 2082
+#' Check that the samples ids from catches and hauls files match.
+#' @param df_catches OAB_catches dataframe.
+#' @param df_hauls OAB_hauls dataframe.
+#' @return dataframe with errors.
 
-
-
+match_hauls_catches_samples_ids <- function(df_catches, df_hauls){
+  catches_samples_ids <- unique(df_catches$COD_MAREA)
+  errors <- df_hauls[!(df_hauls$COD_MAREA %in% catches_samples_ids) & 
+                            df_hauls$MUESTREADO == TRUE, ]
+  if(nrow(errors) > 0){
+    errors <- addTypeOfError(errors, "ERROR 2082: samples' ID from catches file does not match with haul's ones")
+    return(errors)
+  }
+}
