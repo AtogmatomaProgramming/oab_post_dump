@@ -155,6 +155,7 @@ check_them_all_annual <- function() {
 
   ERR$species_without_retained_and_discarded_weight <- species_without_retained_and_discarded_weight(OAB_catches)
 
+
   # LENGTHS
   # In 2021 data, the computer cant manage the next error, so I use it with
   # the data splitted by acronym (didn't save the script)

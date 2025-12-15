@@ -213,6 +213,7 @@ OAB_lengths <- filtered_data$lengths
 OAB_litter <- filtered_data$litter
 OAB_accidentals <- filtered_data$accidentals
 
+
 # FILTER BY ACRONYM ------------------------------------------------------------
 
 # DESNOR
@@ -246,6 +247,10 @@ OAB_accidentals <- filtered_data$accidentals
 
 ERRORS <- check_them_all()
 # ERRORS <- check_them_all_annual()
+
+# This error mustn't be sent to sups. In case of any error detected, it must me
+# solved previously.
+ERROR_match_hauls_catches_trip_ids <- match_hauls_catches_trip_ids(OAB_catches, OAB_hauls)
 
 # FORMAT ERRORS ----------------------------------------------------------------
 

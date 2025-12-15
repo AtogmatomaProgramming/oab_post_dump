@@ -541,16 +541,16 @@ sampled_discard_less_subsample_discard <- function(df){
 #' @return dataframe with errors.
 species_without_retained_and_discarded_weight <- function(df){
   errors <- df[,c("YEAR","COD_MAREA","COD_LANCE","COD_ESP","ESP", "P_RET","P_DESCAR" )]
-  
-  #' Contidion to evaluate if P_RET and P_DESCAR have 
+
+  #' Contidion to evaluate if P_RET and P_DESCAR have
   #' zero or NA value
-  condition <- (errors$P_RET==0 & errors$P_DESCAR==0) | 
+  condition <- (errors$P_RET==0 & errors$P_DESCAR==0) |
     (is.na(errors$P_RET) & is.na(errors$P_DESCAR))
-  
+
   errors <- errors[condition, ]
-  
+
   errors <- unique(errors)
-  
+
   if(nrow(errors) > 0){
     errors <- addTypeOfError(errors,"ERROR: species without retained and discarded weights")
     return(errors)
@@ -559,7 +559,7 @@ species_without_retained_and_discarded_weight <- function(df){
 
 
 #' Check code: 2023
-#' Coherence target species with metier ieo according 
+#' Coherence target species with metier ieo according
 #' estrato rim.
 #' @note Require the file metier_target_species.csv
 metier_ieo_coherence <- function(){
@@ -580,11 +580,11 @@ metier_ieo_coherence <- function(){
 
   if (nrow(errors)>0){
 
-    errors <- addTypeOfError(errors, "ERROR: the target species is not coherent 
+    errors <- addTypeOfError(errors, "ERROR: the target species is not coherent
                              with metier ieo and the estrato rim")
 
     # But, in special cases where the METIER_IEO is no filed:
-    errors[is.na(errors$METIER_IEO), "TIPO_ERROR"] <- "ERROR: the target species 
+    errors[is.na(errors$METIER_IEO), "TIPO_ERROR"] <- "ERROR: the target species
     field can't be checked because the METIER_IEO is empty."
 
     errors <- Filter(function(x) {!all(is.na(x))}, errors)
@@ -1557,6 +1557,18 @@ hauls_unsampled_with_discard_weight <- function(df){
   }
 }
 
+#' Check code: 2082
+#' Check that the samples ids from hauls files exists in catches file.
+#' @param df_catches OAB_catches dataframe.
+#' @param df_hauls OAB_hauls dataframe.
+#' @return dataframe with errors.
 
-
-
+match_hauls_catches_trip_ids <- function(df_catches, df_hauls){
+  catches_trip_ids <- unique(df_catches$COD_MAREA)
+  errors <- df_hauls[!(df_hauls$COD_MAREA %in% catches_trip_ids), ]
+  if(nrow(errors) > 0){
+    errors <- addTypeOfError(errors, "ERROR 2082: trip id of hauls table doesn't
+                             exists in catches table.")
+    return(errors)
+  }
+}
